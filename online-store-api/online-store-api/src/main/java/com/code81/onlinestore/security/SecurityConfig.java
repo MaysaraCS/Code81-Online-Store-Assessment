@@ -44,9 +44,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Public: auth endpoints, customer self-registration, docs
+                        // Public: auth endpoints, customer self-registration, docs, Stripe webhook
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/customers/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/payments/webhook").permitAll()
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
 
                         // Public read-only catalog browsing
@@ -54,13 +55,13 @@ public class SecurityConfig {
 
                         // Catalog writes: store staff only
                         .requestMatchers(HttpMethod.POST, "/api/categories/**", "/api/products/**")
-                            .hasAnyRole("ADMIN", "STORE_MANAGER")
+                        .hasAnyRole("ADMIN", "STORE_MANAGER")
                         .requestMatchers(HttpMethod.PUT, "/api/categories/**", "/api/products/**")
-                            .hasAnyRole("ADMIN", "STORE_MANAGER")
+                        .hasAnyRole("ADMIN", "STORE_MANAGER")
                         .requestMatchers(HttpMethod.PATCH, "/api/categories/**", "/api/products/**")
-                            .hasAnyRole("ADMIN", "STORE_MANAGER")
+                        .hasAnyRole("ADMIN", "STORE_MANAGER")
                         .requestMatchers(HttpMethod.DELETE, "/api/categories/**", "/api/products/**")
-                            .hasAnyRole("ADMIN", "STORE_MANAGER")
+                        .hasAnyRole("ADMIN", "STORE_MANAGER")
 
                         // Everything else requires an authenticated principal;
                         // finer-grained rules (ownership, per-role) live on the
