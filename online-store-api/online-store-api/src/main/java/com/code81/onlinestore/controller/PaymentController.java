@@ -5,7 +5,6 @@ import com.code81.onlinestore.security.AppUserPrincipal;
 import com.code81.onlinestore.service.PaymentService;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
-import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 @RestController
 @RequiredArgsConstructor
@@ -57,10 +58,18 @@ public class PaymentController {
         }
 
         if ("checkout.session.completed".equals(event.getType())) {
-            event.getDataObjectDeserializer().getObject().ifPresent(obj -> {
-                Session session = (Session) obj;
-                paymentService.handleCheckoutCompleted(session.getId(), session.getPaymentIntent());
-            });
+            JsonObject sessionJson = JsonParser.parseString(payload)
+                    .getAsJsonObject()
+                    .getAsJsonObject("data")
+                    .getAsJsonObject("object");
+
+            String sessionId = sessionJson.get("id").getAsString();
+            String paymentIntentId = (sessionJson.has("payment_intent") && !sessionJson.get("payment_intent").isJsonNull())
+                    ? sessionJson.get("payment_intent").getAsString()
+                    : null;
+
+            log.info("Processing checkout.session.completed for session {}", sessionId);
+            paymentService.handleCheckoutCompleted(sessionId, paymentIntentId);
         }
         // Any other event type: acknowledge and ignore. Stripe retries on
         // non-2xx responses, so we always return 200 once signature is valid.

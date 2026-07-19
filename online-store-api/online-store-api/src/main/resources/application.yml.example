@@ -49,3 +49,6 @@ logging:
   level:
     com.code81.onlinestore: DEBUG
     org.hibernate.SQL: DEBUG
+
+    // run strpie CLI for testing
+     & "C:\stripe\stripe.exe" listen --forward-to localhost:8080/api/payments/webhook
