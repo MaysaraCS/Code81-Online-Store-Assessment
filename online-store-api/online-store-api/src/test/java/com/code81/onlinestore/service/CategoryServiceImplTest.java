@@ -4,6 +4,7 @@ import com.code81.onlinestore.dto.category.CategoryRequest;
 import com.code81.onlinestore.dto.category.CategoryResponse;
 import com.code81.onlinestore.entity.Category;
 import com.code81.onlinestore.exception.DuplicateResourceException;
+import com.code81.onlinestore.exception.ResourceInUseException;
 import com.code81.onlinestore.exception.ResourceNotFoundException;
 import com.code81.onlinestore.repository.CategoryRepository;
 import com.code81.onlinestore.repository.ProductRepository;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,6 +32,9 @@ class CategoryServiceImplTest {
 
     @Mock
     private ProductRepository productRepository;
+
+    @Mock
+    private com.code81.onlinestore.service.ActivityLogService activityLogService;
 
     @InjectMocks
     private CategoryServiceImpl categoryService;

@@ -18,8 +18,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceImplTest {
@@ -30,6 +29,7 @@ class OrderServiceImplTest {
     @Mock private CustomerRepository customerRepository;
     @Mock private AddressRepository addressRepository;
     @Mock private ProductRepository productRepository;
+    @Mock private com.code81.onlinestore.service.ActivityLogService activityLogService;
 
     @InjectMocks
     private OrderServiceImpl orderService;
