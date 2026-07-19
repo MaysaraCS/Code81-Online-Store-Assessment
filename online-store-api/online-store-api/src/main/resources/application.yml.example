@@ -38,6 +38,12 @@ app:
     secret: change-this-to-a-long-random-string-before-running
     access-token-expiration-ms: 900000
     refresh-token-expiration-ms: 604800000
+  app:
+    stripe:
+      secret-key: sk_test_your_real_key_here
+      webhook-secret: type your real webhook secret here
+      success-url: http://localhost:8080/api/payments/success
+      cancel-url: http://localhost:8080/api/payments/cancel
 
 logging:
   level:
