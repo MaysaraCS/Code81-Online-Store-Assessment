@@ -4,12 +4,10 @@ import com.code81.onlinestore.dto.common.PageResponse;
 import com.code81.onlinestore.dto.order.OrderResponse;
 import com.code81.onlinestore.dto.order.PlaceOrderRequest;
 import com.code81.onlinestore.entity.*;
-import com.code81.onlinestore.exception.ForbiddenOperationException;
-import com.code81.onlinestore.exception.InsufficientStockException;
-import com.code81.onlinestore.exception.InvalidOrderStatusTransitionException;
-import com.code81.onlinestore.exception.ResourceNotFoundException;
+import com.code81.onlinestore.exception.*;
 import com.code81.onlinestore.mapper.OrderMapper;
 import com.code81.onlinestore.repository.*;
+import com.code81.onlinestore.service.ActivityLogService;
 import com.code81.onlinestore.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,7 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +33,7 @@ public class OrderServiceImpl implements OrderService {
     private final CustomerRepository customerRepository;
     private final AddressRepository addressRepository;
     private final ProductRepository productRepository;
+    private final ActivityLogService activityLogService;
 
     /**
      * Explicit state machine for the order lifecycle. Anything not listed
@@ -162,7 +166,14 @@ public class OrderServiceImpl implements OrderService {
         }
 
         order.setStatus(newStatus);
-        return OrderMapper.toResponse(orderRepository.save(order));
+        Orders saved = orderRepository.save(order);
+
+        if (requesterIsStaff) {
+            activityLogService.log("UPDATE_ORDER_STATUS", "Order", saved.getId(),
+                    current + " -> " + newStatus);
+        }
+
+        return OrderMapper.toResponse(saved);
     }
 
     private void restoreStock(Orders order) {

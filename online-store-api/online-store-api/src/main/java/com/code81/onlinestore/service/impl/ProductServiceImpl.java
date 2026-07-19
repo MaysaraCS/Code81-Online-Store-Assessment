@@ -12,6 +12,7 @@ import com.code81.onlinestore.mapper.ProductMapper;
 import com.code81.onlinestore.repository.CategoryRepository;
 import com.code81.onlinestore.repository.ProductRepository;
 import com.code81.onlinestore.repository.ProductSpecifications;
+import com.code81.onlinestore.service.ActivityLogService;
 import com.code81.onlinestore.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ActivityLogService activityLogService;
 
     @Override
     @Transactional
@@ -37,6 +39,7 @@ public class ProductServiceImpl implements ProductService {
         }
         Category category = findCategory(request.getCategoryId());
         Product saved = productRepository.save(ProductMapper.toEntity(request, category));
+        activityLogService.log("CREATE_PRODUCT", "Product", saved.getId(), "sku=" + saved.getSku());
         return ProductMapper.toResponse(saved);
     }
 
@@ -49,7 +52,9 @@ public class ProductServiceImpl implements ProductService {
         }
         Category category = findCategory(request.getCategoryId());
         ProductMapper.updateEntity(product, request, category);
-        return ProductMapper.toResponse(productRepository.save(product));
+        Product saved = productRepository.save(product);
+        activityLogService.log("UPDATE_PRODUCT", "Product", saved.getId(), "sku=" + saved.getSku());
+        return ProductMapper.toResponse(saved);
     }
 
     @Override
@@ -61,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = true)
     public PageResponse<ProductResponse> list(Long categoryId, Boolean active, String search,
-                                               BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
+                                              BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
         Specification<Product> spec = Specification.allOf(
                 ProductSpecifications.hasCategoryId(categoryId),
                 ProductSpecifications.isActive(active),
@@ -72,6 +77,7 @@ public class ProductServiceImpl implements ProductService {
         Page<ProductResponse> page = productRepository.findAll(spec, pageable).map(ProductMapper::toResponse);
         return PageResponse.from(page);
     }
+
     @Override
     @Transactional
     public ProductResponse adjustStock(Long id, StockAdjustmentRequest request) {
@@ -83,7 +89,10 @@ public class ProductServiceImpl implements ProductService {
                             + ", delta: " + request.getDelta() + ")");
         }
         product.setStockQuantity(newQuantity);
-        return ProductMapper.toResponse(productRepository.save(product));
+        Product saved = productRepository.save(product);
+        activityLogService.log("ADJUST_STOCK", "Product", saved.getId(),
+                "delta=" + request.getDelta() + ", newQuantity=" + newQuantity);
+        return ProductMapper.toResponse(saved);
     }
 
     @Override
@@ -92,6 +101,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = findEntity(id);
         product.setActive(false);
         productRepository.save(product);
+        activityLogService.log("DEACTIVATE_PRODUCT", "Product", id, "sku=" + product.getSku());
     }
 
     private Product findEntity(Long id) {

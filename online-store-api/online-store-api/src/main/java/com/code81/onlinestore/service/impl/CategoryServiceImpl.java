@@ -10,6 +10,7 @@ import com.code81.onlinestore.exception.ResourceNotFoundException;
 import com.code81.onlinestore.mapper.CategoryMapper;
 import com.code81.onlinestore.repository.CategoryRepository;
 import com.code81.onlinestore.repository.ProductRepository;
+import com.code81.onlinestore.service.ActivityLogService;
 import com.code81.onlinestore.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
+    private final ActivityLogService activityLogService;
 
     @Override
     @Transactional
@@ -31,6 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
             throw new DuplicateResourceException("A category named '" + request.getName() + "' already exists");
         }
         Category saved = categoryRepository.save(CategoryMapper.toEntity(request));
+        activityLogService.log("CREATE_CATEGORY", "Category", saved.getId(), "name=" + saved.getName());
         return CategoryMapper.toResponse(saved, 0);
     }
 
@@ -43,6 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
         CategoryMapper.updateEntity(category, request);
         Category saved = categoryRepository.save(category);
+        activityLogService.log("UPDATE_CATEGORY", "Category", saved.getId(), "name=" + saved.getName());
         return CategoryMapper.toResponse(saved, productRepository.countByCategoryId(id));
     }
 
@@ -71,6 +75,7 @@ public class CategoryServiceImpl implements CategoryService {
                     "Cannot delete category '" + category.getName() + "': " + productCount + " product(s) still reference it");
         }
         categoryRepository.delete(category);
+        activityLogService.log("DELETE_CATEGORY", "Category", id, "name=" + category.getName());
     }
 
     private Category findEntity(Long id) {
