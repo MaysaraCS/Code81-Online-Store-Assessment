@@ -1,0 +1,14 @@
+package com.code81.onlinestore.repository;
+
+import com.code81.onlinestore.entity.Address;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface AddressRepository extends JpaRepository<Address, Long> {
+
+    List<Address> findByCustomerIdOrderByIsDefaultDescIdAsc(Long customerId);
+
+    Optional<Address> findByIdAndCustomerId(Long id, Long customerId);
+}
