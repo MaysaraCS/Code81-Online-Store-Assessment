@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: online-store-api
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/online_store
+    username: your_postgres_username
+    password: your_postgres_password
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+  api-docs:
+    path: /v3/api-docs
+
+logging:
+  level:
+    com.code81.onlinestore: DEBUG
+    org.hibernate.SQL: DEBUG
