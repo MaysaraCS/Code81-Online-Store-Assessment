@@ -1,0 +1,26 @@
+# One-time setup
+cp .env.example .env
+# edit .env with your real JWT secret + Stripe test keys
+
+# Start everything (Postgres + backend + frontend), rebuilding images
+docker compose up --build
+
+# Same thing, but detached (returns your terminal, keeps running in background)
+docker compose up --build -d
+
+# View logs (only needed if something looks wrong)
+docker compose logs backend
+docker compose logs postgres
+docker compose logs frontend
+
+# Check container health/status
+docker compose ps
+
+# Stop everything (keeps your Postgres data)
+docker compose down
+
+# Stop everything AND wipe the Postgres volume (fully fresh next start)
+docker compose down -v
+
+# Rebuild just one service after changing its code, without restarting the others
+docker compose up --build backend
