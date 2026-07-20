@@ -1,0 +1,35 @@
+<div class="layout">
+  <header class="nav">
+    <div class="nav__inner">
+      <a routerLink="/" class="nav__brand">Online Store</a>
+
+      <nav class="nav__links">
+        @if (authService.isCustomer()) {
+          <a routerLink="/" routerLinkActive="nav__link--active" [routerLinkActiveOptions]="{exact: true}">Catalog</a>
+          <a routerLink="/cart" routerLinkActive="nav__link--active">Cart</a>
+          <a routerLink="/orders" routerLinkActive="nav__link--active">My Orders</a>
+          <a routerLink="/addresses" routerLinkActive="nav__link--active">Addresses</a>
+        }
+        @if (isStaff) {
+          <a routerLink="/" routerLinkActive="nav__link--active" [routerLinkActiveOptions]="{exact: true}">Catalog</a>
+          <a routerLink="/admin/orders" routerLinkActive="nav__link--active">Orders</a>
+          <a routerLink="/admin/products" routerLinkActive="nav__link--active">Products</a>
+          <a routerLink="/admin/categories" routerLinkActive="nav__link--active">Categories</a>
+          @if (isAdmin) {
+            <a routerLink="/admin/staff" routerLinkActive="nav__link--active">Staff</a>
+            <a routerLink="/admin/activity-log" routerLinkActive="nav__link--active">Activity Log</a>
+          }
+        }
+      </nav>
+
+      <div class="nav__right">
+        <span class="badge badge--neutral">{{ authService.role() }}</span>
+        <button type="button" class="btn btn--outline btn--sm" (click)="logout()">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout__content">
+    <router-outlet />
+  </main>
+</div>

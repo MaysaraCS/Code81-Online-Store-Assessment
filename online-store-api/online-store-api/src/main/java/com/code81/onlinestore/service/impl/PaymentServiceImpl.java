@@ -57,7 +57,7 @@ public class PaymentServiceImpl implements PaymentService {
         try {
             SessionCreateParams params = SessionCreateParams.builder()
                     .setMode(SessionCreateParams.Mode.PAYMENT)
-                    .setSuccessUrl(successUrl + "?session_id={CHECKOUT_SESSION_ID}")
+                    .setSuccessUrl(successUrl + "?session_id={CHECKOUT_SESSION_ID}&orderId=" + order.getId())
                     .setCancelUrl(cancelUrl)
                     .putMetadata("orderId", String.valueOf(order.getId()))
                     .addLineItem(

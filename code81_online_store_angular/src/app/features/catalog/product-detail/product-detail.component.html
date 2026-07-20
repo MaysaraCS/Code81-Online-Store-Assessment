@@ -1,0 +1,34 @@
+@if (product(); as p) {
+  <a routerLink="/" class="back-link">← Back to catalog</a>
+
+  <div class="card detail">
+    <div class="detail__header">
+      <h1>{{ p.name }}</h1>
+      <span class="badge badge--neutral">{{ p.categoryName }}</span>
+    </div>
+
+    <p class="detail__sku">SKU: {{ p.sku }}</p>
+    <p class="detail__description">{{ p.description || 'No description provided.' }}</p>
+
+    <p class="detail__price">{{ p.price | number: '1.2-2' }} USD</p>
+    <p class="detail__stock">{{ p.stockQuantity }} in stock</p>
+
+    @if (message()) {
+      <div class="alert" [class.alert--danger]="messageIsError()" [class.alert--success]="!messageIsError()">
+        {{ message() }}
+      </div>
+    }
+
+    @if (authService.isCustomer()) {
+      <div class="detail__actions">
+        <input type="number" min="1" [max]="p.stockQuantity" [value]="quantity()"
+               (change)="quantity.set(+$any($event.target).value)" />
+        <button type="button" class="btn btn--accent" [disabled]="p.stockQuantity === 0" (click)="addToCart()">
+          {{ p.stockQuantity === 0 ? 'Out of stock' : 'Add to cart' }}
+        </button>
+      </div>
+    }
+  </div>
+} @else {
+  <p>Loading…</p>
+}

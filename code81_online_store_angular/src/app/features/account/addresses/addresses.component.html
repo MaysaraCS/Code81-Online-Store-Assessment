@@ -1,0 +1,90 @@
+<div class="page-header">
+  <h1>My addresses</h1>
+  @if (!showForm()) {
+    <button type="button" class="btn btn--primary btn--sm" (click)="startAdd()">Add address</button>
+  }
+</div>
+
+@if (showForm()) {
+  <div class="card form-card">
+    <h2 class="form-card__title">{{ editingId() ? 'Edit address' : 'New address' }}</h2>
+
+    @if (errorMessage()) {
+      <div class="alert alert--danger">{{ errorMessage() }}</div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="field">
+        <label for="label">Label <span class="field__hint">(optional, e.g. "Home")</span></label>
+        <input id="label" type="text" formControlName="label" />
+      </div>
+      <div class="field">
+        <label for="line1">Address line 1</label>
+        <input id="line1" type="text" formControlName="line1" />
+      </div>
+      <div class="field">
+        <label for="line2">Address line 2 <span class="field__hint">(optional)</span></label>
+        <input id="line2" type="text" formControlName="line2" />
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label for="city">City</label>
+          <input id="city" type="text" formControlName="city" />
+        </div>
+        <div class="field">
+          <label for="state">State/Governorate <span class="field__hint">(optional)</span></label>
+          <input id="state" type="text" formControlName="state" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label for="postalCode">Postal code <span class="field__hint">(optional)</span></label>
+          <input id="postalCode" type="text" formControlName="postalCode" />
+        </div>
+        <div class="field">
+          <label for="country">Country</label>
+          <input id="country" type="text" formControlName="country" />
+        </div>
+      </div>
+      <label class="checkbox-field">
+        <input type="checkbox" formControlName="isDefault" />
+        Set as default address
+      </label>
+
+      <div class="form-card__actions">
+        <button type="submit" class="btn btn--primary" [disabled]="saving()">
+          {{ saving() ? 'Saving…' : 'Save address' }}
+        </button>
+        <button type="button" class="btn btn--outline" (click)="cancel()">Cancel</button>
+      </div>
+    </form>
+  </div>
+}
+
+@if (loading()) {
+  <p>Loading…</p>
+} @else if (addresses().length === 0 && !showForm()) {
+  <div class="card empty-state">No addresses yet - add one to be able to check out.</div>
+} @else {
+  <div class="address-list">
+    @for (a of addresses(); track a.id) {
+      <div class="card address-card">
+        <div class="address-card__header">
+          <strong>{{ a.label || 'Address' }}</strong>
+          @if (a.isDefault) {
+            <span class="badge badge--accent">Default</span>
+          }
+        </div>
+        <p class="address-card__lines">
+          {{ a.line1 }}@if (a.line2) {, {{ a.line2 }}}<br />
+          {{ a.city }}@if (a.state) {, {{ a.state }}}@if (a.postalCode) { {{ a.postalCode }}}<br />
+          {{ a.country }}
+        </p>
+        <div class="address-card__actions">
+          <button type="button" class="btn btn--outline btn--sm" (click)="startEdit(a)">Edit</button>
+          <button type="button" class="btn btn--danger btn--sm" (click)="delete(a)">Delete</button>
+        </div>
+      </div>
+    }
+  </div>
+}

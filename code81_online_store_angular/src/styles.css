@@ -247,3 +247,171 @@ select:focus-visible {
 .badge--neutral { background: #eef1f4; color: var(--color-text-muted); }
 .badge--accent { background: #e8f5ef; color: var(--color-accent-hover); }
 .badge--danger { background: var(--color-danger-bg); color: var(--color-danger); }
+
+/* ===== Shared list/page layout primitives =====
+   Reused across the catalog, admin lists, orders, etc. */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.catalog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.catalog__filters {
+  display: flex;
+  gap: 10px;
+}
+
+.catalog__filters input,
+.catalog__filters select {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.product-card {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.product-card__name {
+  font-weight: 700;
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 15px;
+}
+.product-card__name:hover {
+  color: var(--color-primary);
+}
+
+.product-card__price {
+  margin: 0;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--color-text);
+}
+
+.product-card__stock {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-size: 13.5px;
+  color: var(--color-text-muted);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table th {
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11.5px;
+  letter-spacing: 0.03em;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table td.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.empty-state {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+/* ===== Shared form-page primitives ===== */
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 16px;
+  font-size: 13.5px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+.back-link:hover {
+  color: var(--color-primary);
+}
+
+.form-card {
+  padding: 28px;
+  max-width: 520px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ===== More shared form primitives ===== */
+
+.form-card__title {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.form-card__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}

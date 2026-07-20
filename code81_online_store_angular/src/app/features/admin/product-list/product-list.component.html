@@ -1,0 +1,52 @@
+<div class="page-header">
+  <h1>Products</h1>
+  <a routerLink="/admin/products/new" class="btn btn--primary btn--sm">New product</a>
+</div>
+
+@if (loading()) {
+  <p>Loading…</p>
+} @else if (products().length === 0) {
+  <div class="card empty-state">No products yet.</div>
+} @else {
+  <table class="table">
+    <thead>
+      <tr>
+        <th>SKU</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (p of products(); track p.id) {
+        <tr>
+          <td>{{ p.sku }}</td>
+          <td>{{ p.name }}</td>
+          <td>{{ p.categoryName }}</td>
+          <td>{{ p.price | number: '1.2-2' }}</td>
+          <td>
+            {{ p.stockQuantity }}
+            <button type="button" class="btn btn--outline btn--sm" (click)="adjustStock(p, -1)" [disabled]="p.stockQuantity === 0">−</button>
+            <button type="button" class="btn btn--outline btn--sm" (click)="adjustStock(p, 1)">+</button>
+          </td>
+          <td>
+            @if (p.active) {
+              <span class="badge badge--accent">Active</span>
+            } @else {
+              <span class="badge badge--danger">Inactive</span>
+            }
+          </td>
+          <td class="actions">
+            <a [routerLink]="['/admin/products', p.id, 'edit']" class="btn btn--outline btn--sm">Edit</a>
+            @if (p.active) {
+              <button type="button" class="btn btn--danger btn--sm" (click)="deactivate(p)">Deactivate</button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

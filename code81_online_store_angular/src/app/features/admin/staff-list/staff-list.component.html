@@ -1,0 +1,39 @@
+<div class="page-header">
+  <h1>Staff accounts</h1>
+  <a routerLink="/admin/staff/new" class="btn btn--primary btn--sm">New staff account</a>
+</div>
+
+@if (loading()) {
+  <p>Loading…</p>
+} @else if (staff().length === 0) {
+  <div class="card empty-state">No staff accounts yet.</div>
+} @else {
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (s of staff(); track s.id) {
+        <tr>
+          <td>{{ s.username }}</td>
+          <td>{{ s.email }}</td>
+          <td>{{ s.role }}</td>
+          <td>
+            @if (s.active) {
+              <span class="badge badge--accent">Active</span>
+            } @else {
+              <span class="badge badge--danger">Deactivated</span>
+            }
+          </td>
+          <td><a [routerLink]="['/admin/staff', s.id, 'edit']" class="btn btn--outline btn--sm">Edit</a></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

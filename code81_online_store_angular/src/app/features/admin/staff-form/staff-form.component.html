@@ -1,0 +1,63 @@
+<a routerLink="/admin/staff" class="back-link">← Back to staff</a>
+
+<div class="card form-card">
+  @if (errorMessage()) {
+    <div class="alert alert--danger">{{ errorMessage() }}</div>
+  }
+
+  @if (isEditMode) {
+    <h1>Edit staff account</h1>
+    @if (existingStaff(); as s) {
+      <p class="staff-form__readonly">{{ s.username }} · {{ s.email }}</p>
+
+      <form [formGroup]="editForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="field">
+          <label for="role">Role</label>
+          <select id="role" formControlName="role">
+            @for (r of roles; track r) {
+              <option [value]="r">{{ r }}</option>
+            }
+          </select>
+        </div>
+
+        <label class="checkbox-field">
+          <input type="checkbox" formControlName="active" />
+          Active
+        </label>
+
+        <button type="submit" class="btn btn--primary" [disabled]="loading()">
+          {{ loading() ? 'Saving…' : 'Save changes' }}
+        </button>
+      </form>
+    }
+  } @else {
+    <h1>New staff account</h1>
+
+    <form [formGroup]="createForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="field">
+        <label for="username">Username</label>
+        <input id="username" type="text" formControlName="username" />
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" formControlName="password" placeholder="At least 8 characters" />
+      </div>
+      <div class="field">
+        <label for="role">Role</label>
+        <select id="role" formControlName="role">
+          @for (r of roles; track r) {
+            <option [value]="r">{{ r }}</option>
+          }
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn--primary" [disabled]="loading()">
+        {{ loading() ? 'Creating…' : 'Create account' }}
+      </button>
+    </form>
+  }
+</div>

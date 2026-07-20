@@ -1,0 +1,38 @@
+<div class="page-header">
+  <h1>Categories</h1>
+  <a routerLink="/admin/categories/new" class="btn btn--primary btn--sm">New category</a>
+</div>
+
+@if (errorMessage()) {
+  <div class="alert alert--danger">{{ errorMessage() }}</div>
+}
+
+@if (loading()) {
+  <p>Loading…</p>
+} @else if (categories().length === 0) {
+  <div class="card empty-state">No categories yet.</div>
+} @else {
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Products</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (c of categories(); track c.id) {
+        <tr>
+          <td>{{ c.name }}</td>
+          <td>{{ c.description || '—' }}</td>
+          <td>{{ c.productCount }}</td>
+          <td class="actions">
+            <a [routerLink]="['/admin/categories', c.id, 'edit']" class="btn btn--outline btn--sm">Edit</a>
+            <button type="button" class="btn btn--danger btn--sm" (click)="delete(c)">Delete</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

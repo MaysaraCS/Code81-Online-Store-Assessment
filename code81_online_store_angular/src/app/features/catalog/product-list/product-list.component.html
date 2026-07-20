@@ -1,0 +1,49 @@
+<div class="catalog">
+  <div class="catalog__header">
+    <h1>Catalog</h1>
+    <div class="catalog__filters">
+      <input
+        type="search"
+        placeholder="Search products…"
+        (change)="onSearch($any($event.target).value)" />
+      <select (change)="onCategoryChange($any($event.target).value)">
+        <option value="">All categories</option>
+        @for (c of categories(); track c.id) {
+          <option [value]="c.id">{{ c.name }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (addedMessage()) {
+    <div class="alert alert--success">{{ addedMessage() }}</div>
+  }
+
+  @if (loading()) {
+    <p>Loading products…</p>
+  } @else if (products().length === 0) {
+    <p>No products match your filters.</p>
+  } @else {
+    <div class="grid">
+      @for (p of products(); track p.id) {
+        <div class="card product-card">
+          <a [routerLink]="['/products', p.id]" class="product-card__name">{{ p.name }}</a>
+          <span class="badge badge--neutral">{{ p.categoryName }}</span>
+          <p class="product-card__price">{{ p.price | number: '1.2-2' }} USD</p>
+          <p class="product-card__stock">{{ p.stockQuantity }} in stock</p>
+          @if (authService.isCustomer()) {
+            <button type="button" class="btn btn--accent btn--sm btn--block" [disabled]="p.stockQuantity === 0" (click)="addToCart(p)">
+              {{ p.stockQuantity === 0 ? 'Out of stock' : 'Add to cart' }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="pager">
+      <button type="button" class="btn btn--outline btn--sm" [disabled]="page() === 0" (click)="prevPage()">Previous</button>
+      <span>Page {{ page() + 1 }} of {{ totalPages() }}</span>
+      <button type="button" class="btn btn--outline btn--sm" [disabled]="page() + 1 >= totalPages()" (click)="nextPage()">Next</button>
+    </div>
+  }
+</div>

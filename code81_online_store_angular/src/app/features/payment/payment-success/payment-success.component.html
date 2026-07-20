@@ -1,0 +1,16 @@
+<div class="result-page">
+  <div class="card result-card">
+    <div class="result-card__icon result-card__icon--success">✓</div>
+    <h1>Payment received</h1>
+    <p>
+      Thanks! Your payment went through. It can take a few seconds for your order status to
+      update to <strong>PAID</strong> while we confirm it with Stripe.
+    </p>
+
+    @if (orderId) {
+      <a [routerLink]="['/orders', orderId]" class="btn btn--primary">View my order</a>
+    } @else {
+      <a routerLink="/orders" class="btn btn--primary">View my orders</a>
+    }
+  </div>
+</div>

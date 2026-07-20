@@ -1,0 +1,5 @@
+.staff-form__readonly {
+  font-size: 13.5px;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+}

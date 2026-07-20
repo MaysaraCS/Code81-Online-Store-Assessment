@@ -1,0 +1,34 @@
+<h1>My orders</h1>
+
+@if (loading()) {
+  <p>Loading…</p>
+} @else if (orders().length === 0) {
+  <div class="card empty-state">
+    You haven't placed any orders yet. <a routerLink="/">Browse the catalog</a>.
+  </div>
+} @else {
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Order #</th>
+        <th>Date</th>
+        <th>Items</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (o of orders(); track o.id) {
+        <tr>
+          <td>#{{ o.id }}</td>
+          <td>{{ o.createdAt | date: 'mediumDate' }}</td>
+          <td>{{ o.items.length }}</td>
+          <td>{{ o.totalAmount | number: '1.2-2' }}</td>
+          <td><app-order-status-badge [status]="o.status" /></td>
+          <td><a [routerLink]="['/orders', o.id]" class="btn btn--outline btn--sm">View</a></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

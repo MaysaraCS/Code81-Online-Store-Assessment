@@ -42,8 +42,8 @@ app:
     stripe:
       secret-key: sk_test_your_real_key_here
       webhook-secret: type your real webhook secret here
-      success-url: http://localhost:8080/api/payments/success
-      cancel-url: http://localhost:8080/api/payments/cancel
+      success-url: ${STRIPE_SUCCESS_URL:http://localhost:4200/payment/success}
+      cancel-url: ${STRIPE_CANCEL_URL:http://localhost:4200/payment/cancel}
 
 logging:
   level:

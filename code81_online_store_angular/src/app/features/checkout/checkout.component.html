@@ -1,0 +1,55 @@
+<a routerLink="/cart" class="back-link">← Back to cart</a>
+<h1>Checkout</h1>
+
+@if (errorMessage()) {
+  <div class="alert alert--danger">{{ errorMessage() }}</div>
+}
+
+@if (loading()) {
+  <p>Loading…</p>
+} @else {
+  <div class="checkout-grid">
+    <div class="card checkout-section">
+      <h2 class="form-card__title">Shipping address</h2>
+
+      @if (addresses().length === 0) {
+        <p>
+          You don't have any saved addresses yet.
+          <a routerLink="/addresses">Add one</a> before checking out.
+        </p>
+      } @else {
+        @for (a of addresses(); track a.id) {
+          <label class="address-option">
+            <input
+              type="radio"
+              name="address"
+              [checked]="selectedAddressId() === a.id"
+              (change)="selectedAddressId.set(a.id)" />
+            <span>
+              <strong>{{ a.label || 'Address' }}</strong> - {{ a.line1 }}, {{ a.city }}, {{ a.country }}
+            </span>
+          </label>
+        }
+      }
+    </div>
+
+    <div class="card checkout-section">
+      <h2 class="form-card__title">Order summary</h2>
+      @if (cart(); as c) {
+        <ul class="summary-list">
+          @for (item of c.items; track item.productId) {
+            <li>{{ item.quantity }} × {{ item.productName }} <span>{{ item.subtotal | number: '1.2-2' }}</span></li>
+          }
+        </ul>
+        <div class="summary-total">
+          <span>Total</span>
+          <strong>{{ c.totalAmount | number: '1.2-2' }} USD</strong>
+        </div>
+      }
+
+      <button type="button" class="btn btn--accent btn--block" [disabled]="placing() || addresses().length === 0" (click)="placeOrder()">
+        {{ placing() ? 'Placing order…' : 'Place order' }}
+      </button>
+    </div>
+  </div>
+}
