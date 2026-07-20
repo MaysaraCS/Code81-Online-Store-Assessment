@@ -2,6 +2,8 @@
 
 A full-stack online store: Java 21 / Spring Boot backend, Angular 19 frontend, PostgreSQL, JWT auth, Stripe payment simulation.
 
+here is the link for my ERD : https://drive.google.com/file/d/1GDceZDP5mM_BDBtqEC7ofdjKDL_aDBFu/view?usp=sharing
+OPEN IT USING draw.io
 
 ## Screenshots
 
