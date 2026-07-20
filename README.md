@@ -2,11 +2,11 @@
 
 A full-stack online store: Java 21 / Spring Boot backend, Angular 19 frontend, PostgreSQL, JWT auth, Stripe payment simulation.
 
-> This is the top-level README - it's the overview and "how do I run the whole thing" doc. Each project also has its own README with deeper detail: [`online-store-api/README.md`](./online-store-api/README.md) for backend design decisions, and [`online-store-frontend/README.md`](./online-store-frontend/README.md) for frontend structure.
 
 ## Screenshots
 
 **Login**
+
 ![Login page](./screenshots/login-page.png)
 
 **checkout**
