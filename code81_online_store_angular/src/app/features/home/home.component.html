@@ -1,0 +1,17 @@
+<div class="page">
+  <header class="page__header">
+    <h1>Online Store</h1>
+    <div class="page__header-right">
+      <span class="badge badge--neutral">{{ authService.role() }}</span>
+      <button type="button" class="btn btn--outline btn--sm" (click)="logout()">Sign out</button>
+    </div>
+  </header>
+
+  <div class="card placeholder">
+    <p class="placeholder__text">
+      You're signed in as <strong>{{ authService.role() }}</strong>. The product catalog, cart,
+      and order screens are next (Phase F2 onward) - this page just confirms login, token
+      storage, and the route guard are all working end to end.
+    </p>
+  </div>
+</div>
