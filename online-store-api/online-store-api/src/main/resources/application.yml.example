@@ -3,9 +3,9 @@ spring:
     name: online-store-api
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/online_store
-    username: your_postgres_username
-    password: your_postgres_password
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:online_store}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
 
   jpa:
     hibernate:
@@ -23,7 +23,7 @@ spring:
     baseline-on-migrate: true
 
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
 
 springdoc:
   swagger-ui:
@@ -32,23 +32,21 @@ springdoc:
   api-docs:
     path: /v3/api-docs
 
-
 app:
   jwt:
-    secret: change-this-to-a-long-random-string-before-running
-    access-token-expiration-ms: 900000
-    refresh-token-expiration-ms: 604800000
-  app:
-    stripe:
-      secret-key: sk_test_your_real_key_here
-      webhook-secret: type your real webhook secret here
-      success-url: ${STRIPE_SUCCESS_URL:http://localhost:4200/payment/success}
-      cancel-url: ${STRIPE_CANCEL_URL:http://localhost:4200/payment/cancel}
+    secret: ${JWT_SECRET:dev-only-secret-key-please-override-me-before-deploying-anywhere-real-1234567890}
+    access-token-expiration-ms: ${JWT_ACCESS_EXP_MS:900000}
+    refresh-token-expiration-ms: ${JWT_REFRESH_EXP_MS:604800000}
+  stripe:
+    secret-key: ${STRIPE_SECRET_KEY:sk_test_replace_me}
+    webhook-secret: ${STRIPE_WEBHOOK_SECRET:whsec_replace_me}
+    success-url: ${STRIPE_SUCCESS_URL:http://localhost:4200/payment/success}
+    cancel-url: ${STRIPE_CANCEL_URL:http://localhost:4200/payment/cancel}
 
 logging:
   level:
     com.code81.onlinestore: DEBUG
     org.hibernate.SQL: DEBUG
 
-    // run strpie CLI for testing
-     & "C:\stripe\stripe.exe" listen --forward-to localhost:8080/api/payments/webhook
+# To test Stripe webhooks locally, run this in a separate terminal:
+# stripe listen --forward-to localhost:8080/api/payments/webhook
